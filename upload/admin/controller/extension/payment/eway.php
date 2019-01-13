@@ -148,6 +148,30 @@ class ControllerExtensionPaymentEway extends Controller {
 			$data['payment_eway_password'] = $this->config->get('payment_eway_password');
 		}
 
+		if (isset($this->request->post['payment_eway_endpoint'])) {
+			$data['payment_eway_endpoint'] = $this->request->post['payment_eway_endpoint'];
+		} else {
+			$data['payment_eway_endpoint'] = $this->config->get('payment_eway_endpoint');
+		}
+
+		if (isset($this->request->post['payment_eway_privatekey'])) {
+			$data['payment_eway_privatekey'] = $this->request->post['payment_eway_privatekey'];
+		} else {
+			$data['payment_eway_privatekey'] = $this->config->get('payment_eway_privatekey');
+		}
+
+		if (isset($this->request->post['payment_eway_mid'])) {
+			$data['payment_eway_mid'] = $this->request->post['payment_eway_mid'];
+		} else {
+			$data['payment_eway_mid'] = $this->config->get('payment_eway_mid');
+		}
+
+		if (isset($this->request->post['payment_eway_mpassword'])) {
+			$data['payment_eway_mpassword'] = $this->request->post['payment_eway_mpassword'];
+		} else {
+			$data['payment_eway_mpassword'] = $this->config->get('payment_eway_mpassword');
+		}
+
 		if (isset($this->request->post['payment_eway_status'])) {
 			$data['payment_eway_status'] = $this->request->post['payment_eway_status'];
 		} else {

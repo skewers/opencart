@@ -93,6 +93,15 @@ class ControllerApiOrder extends Controller {
 				}
 			}
 
+			// Set Price
+			if (!$json && isset($this->request->post['price'])) {
+				if (isset($this->request->post['cart_id'])) {
+					$this->cart->getProducts($this->request->post['price'], (int)$this->request->post['cart_id']);
+				} else {
+					$this->cart->getProducts($this->request->post['price']);
+				}
+			}
+
 			if (!$json) {
 				$json['success'] = $this->language->get('text_success');
 				

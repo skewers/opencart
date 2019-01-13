@@ -31,10 +31,16 @@ class Cart {
 		}
 	}
 
-	public function getProducts() {
-		if (!$this->data) {
+	// use new_price as the price of the head product in the cart or of the product having price_cart_id
+	public function getProducts($new_price=null, $price_cart_id=null) {
+		if (!is_null($new_price) || !$this->data) {
+			$this->data = array();
 			$cart_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "cart WHERE api_id = '" . (isset($this->session->data['api_id']) ? (int)$this->session->data['api_id'] : 0) . "' AND customer_id = '" . (int)$this->customer->getId() . "' AND session_id = '" . $this->db->escape($this->session->getId()) . "'");
 
+			// Use the head cart if price_cart_id is null
+			if (!is_null($new_price) && is_null($price_cart_id) && $cart_query->num_rows) {
+				$price_cart_id = $cart_query->rows[0]['cart_id'];
+			}
 			foreach ($cart_query->rows as $cart) {
 				$stock = true;
 
@@ -233,6 +239,11 @@ class Cart {
 						);
 					} else {
 						$recurring = false;
+					}
+
+					// Use new_price as the price of the cart
+					if (!is_null($new_price) && $cart['cart_id'] == $price_cart_id) {
+						$price = $new_price;
 					}
 
 					$this->data[] = array(

@@ -27,7 +27,11 @@
           {% for extension in extensions %}
             <tr>
               <td class="text-left">{{ extension.name }}</td>
+              {% if extension.name == "KaniPay Payment" %}
+              <td class="text-center"></td>
+              {% else %}
               <td class="text-center">{{ extension.link }}</td>
+              {% endif %}
               <td class="text-left">{{ extension.status }}</td>
               <td class="text-right">{{ extension.sort_order }}</td>
               <td class="text-right">{% if extension.installed %}

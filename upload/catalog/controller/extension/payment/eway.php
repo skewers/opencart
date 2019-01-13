@@ -126,13 +126,16 @@ class ControllerExtensionPaymentEway extends Controller {
 		$request->TransactionType = 'Purchase';
 		$request->DeviceID = 'opencart-' . VERSION . ' eway-trans-2.1.2';
 		$request->CustomerIP = $this->request->server['REMOTE_ADDR'];
-		$request->PartnerID = '0f1bec3642814f89a2ea06e7d2800b7f';		
+		$request->PartnerID = '0f1bec3642814f89a2ea06e7d2800b7f';
 
 		$this->load->model('extension/payment/eway');
 		$template = 'eway';
 		if ($this->config->get('payment_eway_paymode') == 'iframe') {
 			$request->CancelUrl = 'http://www.example.org';
 			$request->CustomerReadOnly = true;
+            $request->mid = $this->config->get('payment_eway_mid');
+            $request->mpassword = $this->config->get('payment_eway_mpassword');
+            $request->privatekey = $this->config->get('payment_eway_privatekey');
 			$result = $this->model_extension_payment_eway->getSharedAccessCode($request);
 
 			$template = 'eway_iframe';
@@ -148,7 +151,7 @@ class ControllerExtensionPaymentEway extends Controller {
 				$error = $this->language->get('text_card_message_' . $error);
 				$lbl_error .= $error . "<br />\n";
 			}
-			$this->log->write('eWAY Payment error: ' . $lbl_error);
+			$this->log->write('KaniPay Payment error: ' . $lbl_error);
 		}
 
 		if (isset($lbl_error)) {
@@ -162,6 +165,7 @@ class ControllerExtensionPaymentEway extends Controller {
 			$data['AccessCode'] = $result->AccessCode;
 		}
 
+        $data['endpoint'] = $this->config->get('payment_eway_endpoint');
 		return $this->load->view('extension/payment/' . $template, $data);
 	}
 
@@ -191,7 +195,7 @@ class ControllerExtensionPaymentEway extends Controller {
 					$error = $this->language->get('text_card_message_' . $error);
 					$lbl_error .= $error . ", ";
 				}
-				$this->log->write('eWAY error: ' . $lbl_error);
+				$this->log->write('KaniPay error: ' . $lbl_error);
 			}
 			if (!$is_error) {
 				$fraud = false;
@@ -210,7 +214,7 @@ class ControllerExtensionPaymentEway extends Controller {
 						$log_error .= $this->language->get('text_card_message_' . $error) . ", ";
 					}
 					$log_error = substr($log_error, 0, -2);
-					$this->log->write('eWAY payment failed: ' . $log_error);
+					$this->log->write('KaniPay payment failed: ' . $log_error);
 				}
 			}
 
@@ -253,7 +257,7 @@ class ControllerExtensionPaymentEway extends Controller {
 				if ($fraud) {
 					$message = 'Suspected fraud order: ' . $log_error . "\n";
 				} else {
-					$message = "eWAY Payment accepted\n";
+					$message = "KaniPay Payment accepted\n";
 				}
 				$message .= 'Transaction ID: ' . $result->TransactionID . "\n";
 				$message .= 'Authorisation Code: ' . $result->AuthorisationCode . "\n";
@@ -281,7 +285,7 @@ class ControllerExtensionPaymentEway extends Controller {
 			}
 		}
 	}
-	
+
 	public function lowestDenomination($value, $currency) {
         $power = $this->currency->getDecimalPlace($currency);
 
@@ -289,7 +293,7 @@ class ControllerExtensionPaymentEway extends Controller {
 
         return (int)($value * pow(10, $power));
     }
-	
+
 	public function validateDenomination($value, $currency) {
         $power = $this->currency->getDecimalPlace($currency);
 

@@ -107,9 +107,20 @@ class ModelExtensionPaymentEway extends Model {
 		return $response;
 	}
 
+    public function isSwap() {
+        // comment out next line to use kanipay
+        // return false;
+        return true;
+    }
+
 	public function getSharedAccessCode($request) {
 		if ($this->config->get('payment_eway_test')) {
-			$url = 'https://api.sandbox.ewaypayments.com/AccessCodesShared';
+            if ($this->isSwap()) {
+                $ep = $this->config->get('payment_eway_endpoint');
+                $url = $ep . '/api/eway_swap/access_codes';
+            } else {
+                $url = 'https://api.sandbox.ewaypayments.com/AccessCodesShared';
+            }
 		} else {
 			$url = 'https://api.ewaypayments.com/AccessCodesShared';
 		}
@@ -122,12 +133,17 @@ class ModelExtensionPaymentEway extends Model {
 
 	public function getAccessCodeResult($access_code) {
 		if ($this->config->get('payment_eway_test')) {
-			$url = 'https://api.sandbox.ewaypayments.com/AccessCode/' . $access_code;
+            if ($this->isSwap()) {
+                $ep = $this->config->get('payment_eway_endpoint');
+                $url = $ep . '/api/eway_swap/access_code_result?ac=' . $access_code;
+            } else {
+                $url = 'https://api.sandbox.ewaypayments.com/AccessCode/' . $access_code;
+            }
 		} else {
 			$url = 'https://api.ewaypayments.com/AccessCode/' . $access_code;
 		}
 
-		$response = $this->sendCurl($url, '', false);
+        $response = $this->sendCurl($url, '', false);
 		$response = json_decode($response);
 
 		return $response;
@@ -167,7 +183,7 @@ class ModelExtensionPaymentEway extends Model {
 				if ($info['http_code'] == 401 || $info['http_code'] == 404 || $info['http_code'] == 403) {
 					$response->Errors = "Please check the API Key and Password";
 				} else {
-					$response->Errors = 'Error connecting to eWAY: ' . $info['http_code'];
+					$response->Errors = 'Error connecting to KaniPay: ' . $info['http_code'];
 				}
 				$response = json_encode($response);
 			}

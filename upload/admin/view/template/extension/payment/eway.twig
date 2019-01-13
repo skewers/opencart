@@ -25,10 +25,6 @@
       <div class="card-body">
         <form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-payment">
           <div class="form-group row">
-            <label class="col-sm-2">{{ text_connect_eway }}</label>
-            <div class="col-sm-10">{{ text_eway_image }}</div>
-          </div>
-          <div class="form-group row">
             <label class="col-sm-2 col-form-label" for="input-paymode">{{ entry_paymode }}</label>
             <div class="col-sm-10">
               <select name="payment_eway_paymode" id="input-test" class="form-control">
@@ -43,7 +39,7 @@
             </div>
           </div>
           <div class="form-group row">
-            <label class="col-sm-2 col-form-label" for="input-test">{{ entry_test }}</label>
+            <label class="col-sm-2 col-form-label" for="input-test">Production mode</label>
             <div class="col-sm-10">
               <div class="btn-group btn-group-toggle" data-toggle="buttons">
                 {% if payment_eway_test %}
@@ -54,26 +50,59 @@
                   <label class="btn btn-outline-secondary active"><input type="radio" name="payment_eway_test" value="0" checked="checked"/> {{ text_no }}</label>
                 {% endif %}
               </div>
-              <small class="form-text text-muted">{{ help_testmode }}</small>
             </div>
           </div>
           <div class="form-group row required">
-            <label class="col-sm-2 col-form-label" for="input-username">{{ entry_username }}</label>
+            <label class="col-sm-2 col-form-label" for="input-username">API Key</label>
             <div class="col-sm-10">
               <input type="text" name="payment_eway_username" value="{{ payment_eway_username }}" placeholder="{{ entry_username }}" id="input-username" class="form-control"/>
-              <small class="form-text text-muted">{{ help_username }}</small>
               {% if error_username %}
                 <div class="invalid-tooltip">{{ error_username }}</div>
               {% endif %}
             </div>
           </div>
           <div class="form-group row required">
-            <label class="col-sm-2 col-form-label" for="input-password">{{ entry_password }}</label>
+            <label class="col-sm-2 col-form-label" for="input-password">API Password</label>
             <div class="col-sm-10">
               <input type="password" name="payment_eway_password" value="{{ payment_eway_password }}" placeholder="{{ entry_password }}" id="input-password" class="form-control"/>
-              <small class="form-text text-muted">{{ help_password }}</small>
               {% if error_password %}
                 <div class="invalid-tooltip">{{ error_password }}</div>
+              {% endif %}
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-sm-2 col-form-label" for="input-endpoint">Endpoint</label>
+            <div class="col-sm-10">
+              <input type="text" name="payment_eway_endpoint" value="{{ payment_eway_endpoint }}" placeholder="{{ entry_endpoint }}" id="input-endpoint" class="form-control"/>
+              {% if error_endpoint %}
+                <div class="invalid-tooltip">{{ error_endpoint }}</div>
+              {% endif %}
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-sm-2 col-form-label" for="input-privatekey">Private Key</label>
+            <div class="col-sm-10">
+              <textarea name="payment_eway_privatekey" id="input-privatekey" class="form-control">{{ payment_eway_privatekey }}</textarea>
+              {% if error_privatekey %}
+                <div class="invalid-tooltip">{{ error_privatekey }}</div>
+              {% endif %}
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-sm-2 col-form-label" for="input-mid">Mid</label>
+            <div class="col-sm-10">
+              <input type="text" name="payment_eway_mid" value="{{ payment_eway_mid }}" placeholder="{{ entry_mid }}" id="input-mid" class="form-control"/>
+              {% if error_mid %}
+                <div class="invalid-tooltip">{{ error_mid }}</div>
+              {% endif %}
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-sm-2 col-form-label" for="input-mpassword">Password</label>
+            <div class="col-sm-10">
+              <input type="password" name="payment_eway_mpassword" value="{{ payment_eway_mpassword }}" placeholder="{{ entry_mpassword }}" id="input-mpassword" class="form-control"/>
+              {% if error_mpassword %}
+                <div class="invalid-tooltip">{{ error_mpassword }}</div>
               {% endif %}
             </div>
           </div>
@@ -91,21 +120,6 @@
               </select>
             </div>
           </div>
-          <div class="form-group row">
-            <label class="col-sm-2 col-form-label" for="input-transaction-method">{{ entry_transaction_method }}</label>
-            <div class="col-sm-10">
-              <select name="payment_eway_transaction_method" id="input-transaction-method" class="form-control">
-                {% if payment_eway_transaction_method == 'auth' %}
-                  <option value="payment">{{ text_sale }}</option>
-                  <option value="auth" selected="selected">{{ text_authorisation }}</option>
-                {% else %}
-                  <option value="payment" selected="selected">{{ text_sale }}</option>
-                  <option value="auth">{{ text_authorisation }}</option>
-                {% endif %}
-              </select>
-              <small class="form-text text-muted">{{ help_transaction_method }}</small>
-            </div>
-          </div>
           <div class="form-group row required">
             <label class="col-sm-2 col-form-label" for="eway_payment_type">{{ entry_payment_type }}</label>
             <div class="col-sm-10">
@@ -114,21 +128,6 @@
               </p>
               <p>
                 <input type="hidden" name="payment_eway_payment_type[mastercard]" value="0"/> <input type='checkbox' name='payment_eway_payment_type[mastercard]' value='1' {{ payment_eway_payment_type.mastercard is defined and payment_eway_payment_type.mastercard == 1 ? 'checked="checked"' : '' }} /> CC - MasterCard
-              </p>
-              <p>
-                <input type="hidden" name="payment_eway_payment_type[amex]" value="0"/> <input type='checkbox' name='payment_eway_payment_type[amex]' value='1' {{ payment_eway_payment_type.amex is defined and payment_eway_payment_type.amex == 1 ? 'checked="checked"' : '' }} /> CC - Amex
-              </p>
-              <p>
-                <input type="hidden" name="payment_eway_payment_type[diners]" value="0"/> <input type='checkbox' name='payment_eway_payment_type[diners]' value='1' {{ payment_eway_payment_type.diners is defined and payment_eway_payment_type.diners == 1 ? 'checked="checked"' : '' }} /> CC - Diners Club
-              </p>
-              <p>
-                <input type="hidden" name="payment_eway_payment_type[jcb]" value="0"/> <input type='checkbox' name='payment_eway_payment_type[jcb]' value='1' {{ payment_eway_payment_type.jcb is defined and payment_eway_payment_type.jcb == 1 ? 'checked="checked"' : '' }} /> CC - JCB
-              </p>
-              <p>
-                <input type="hidden" name="payment_eway_payment_type[paypal]" value="0"/> <input type='checkbox' name='payment_eway_payment_type[paypal]' value='1' {{ payment_eway_payment_type.paypal is defined and payment_eway_payment_type.paypal == 1 ? 'checked="checked"' : '' }} /> PayPal
-              </p>
-              <p>
-                <input type="hidden" name="payment_eway_payment_type[masterpass]" value="0"/> <input type='checkbox' name='payment_eway_payment_type[masterpass]' value='1' {{ payment_eway_payment_type.masterpass is defined and payment_eway_payment_type.masterpass == 1 ? 'checked="checked"' : '' }} /> MasterPass
               </p>
               {% if error_payment_type %}
                 <div class="invalid-tooltip">{{ error_payment_type }}</div>
