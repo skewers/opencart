@@ -30,8 +30,13 @@
   }
 
   $('#button-confirm').bind('click', function() {
-	  $('#button-confirm').button('loading');
-	  eCrypt.showModalPayment(KaniPayConfig, resultCallback);
+    $('#button-confirm').button('loading');
+    var interval = setInterval(function () {
+      if (typeof(eCrypt) !== 'undefined') {
+        clearInterval(interval);
+        eCrypt.showModalPayment(KaniPayConfig, resultCallback);
+      }
+    }, 100);
   });
 
   //--></script>
