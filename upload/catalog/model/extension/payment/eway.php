@@ -183,7 +183,7 @@ class ModelExtensionPaymentEway extends Model {
 				if ($info['http_code'] == 401 || $info['http_code'] == 404 || $info['http_code'] == 403) {
 					$response->Errors = "Please check the API Key and Password";
 				} else {
-					$response->Errors = 'Error connecting to KaniPay: ' . $info['http_code'];
+					$response->Errors = 'Error connecting to processor: ' . $info['http_code'];
 				}
 				$response = json_encode($response);
 			}
