@@ -136,7 +136,11 @@ class ControllerExtensionPaymentEway extends Controller {
             $request->mid = $this->config->get('payment_eway_mid');
             $request->mpassword = $this->config->get('payment_eway_mpassword');
             $request->privatekey = $this->config->get('payment_eway_privatekey');
+            $request->transactionType = 'PURCHASE';
+            $request->currency = $request->Payment->CurrencyCode;
+            $request->amount = $request->Payment->TotalAmount;
 			$result = $this->model_extension_payment_eway->getSharedAccessCode($request);
+			// throw new Exception('KaniPay Payment debug: ' . json_encode((array)$result));
 
 			$template = 'eway_iframe';
 		} else {
@@ -158,11 +162,12 @@ class ControllerExtensionPaymentEway extends Controller {
 			$data['error'] = $lbl_error;
 		} else {
 			if ($this->config->get('payment_eway_paymode') == 'iframe') {
-				$data['callback'] = $this->url->link('extension/payment/eway/callback', 'language=' . $this->config->get('config_language') . '&AccessCode=' . $result->AccessCode);
-				$data['SharedPaymentUrl'] = $result->SharedPaymentUrl;
+				$data['callback'] = $this->url->link('extension/payment/eway/callback', 'language=' . $this->config->get('config_language') . '&AccessCode=' . $result->reqid);
+				// $data['SharedPaymentUrl'] = $result->SharedPaymentUrl;
+				$data['paymentPageUrl'] = $result->paymentPageUrl;
 			}
-			$data['action'] = $result->FormActionURL;
-			$data['AccessCode'] = $result->AccessCode;
+			// $data['action'] = $result->FormActionURL;
+			// $data['AccessCode'] = $result->AccessCode;
 		}
 
         $data['endpoint'] = $this->config->get('payment_eway_endpoint');

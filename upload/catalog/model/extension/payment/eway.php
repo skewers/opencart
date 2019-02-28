@@ -117,7 +117,8 @@ class ModelExtensionPaymentEway extends Model {
 		if ($this->config->get('payment_eway_test')) {
             if ($this->isSwap()) {
                 $ep = $this->config->get('payment_eway_endpoint');
-                $url = $ep . '/api/eway_swap/access_codes';
+                // $url = $ep . '/api/eway_swap/access_codes';
+                $url = $ep . '/api/init_cc_iframe';
             } else {
                 $url = 'https://api.sandbox.ewaypayments.com/AccessCodesShared';
             }
@@ -135,7 +136,8 @@ class ModelExtensionPaymentEway extends Model {
 		if ($this->config->get('payment_eway_test')) {
             if ($this->isSwap()) {
                 $ep = $this->config->get('payment_eway_endpoint');
-                $url = $ep . '/api/eway_swap/access_code_result?ac=' . $access_code;
+                // $url = $ep . '/api/eway_swap/access_code_result?ac=' . $access_code;
+                $url = $ep . '/api/get_cc_iframe_result?reqid=' . $access_code;
             } else {
                 $url = 'https://api.sandbox.ewaypayments.com/AccessCode/' . $access_code;
             }
