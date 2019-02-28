@@ -139,6 +139,8 @@ class ControllerExtensionPaymentEway extends Controller {
             $request->transactionType = 'PURCHASE';
             $request->currency = $request->Payment->CurrencyCode;
             $request->amount = $request->Payment->TotalAmount;
+            // $request->callbackUrlPrefix = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]";
+            $request->callbackUrlPrefix = "https://$_SERVER[HTTP_HOST]";
 			$result = $this->model_extension_payment_eway->getSharedAccessCode($request);
 			// throw new Exception('KaniPay Payment debug: ' . json_encode((array)$result));
 
